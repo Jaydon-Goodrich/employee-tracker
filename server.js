@@ -2,6 +2,7 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 const inquirer = require('inquirer');
 
+// Function to start the prompt
 const startPrompt = function () {
   inquirer
     .prompt([
@@ -13,6 +14,7 @@ const startPrompt = function () {
       }
     ])
     .then(({ action }) => {
+      //Conditionals to see what user selected
       if (action === 'View all departments') {
         readDepartments();
       }
@@ -67,6 +69,7 @@ connection.connect(err => {
   startProgram();
 });
 
+//SELECTS all the data on employees from database and displays in console
 readEmployees = () => {
   console.log('Selecting all employees...\n');
   const query = connection.query(
@@ -85,7 +88,7 @@ readEmployees = () => {
   )
   //
 };
-
+//SELECTS all the data on departments from database and displays in console
 readDepartments = () => {
   console.log('Selecting all departments...\n');
 
@@ -101,7 +104,7 @@ readDepartments = () => {
   )
 
 };
-
+//SELECTS all the data on role from database and displays in console
 readRoles = () => {
   console.log('Selecting all roles...\n');
 
@@ -119,7 +122,7 @@ readRoles = () => {
   )
 
 };
-
+//Used to create a new department and add to the Database
 addDepartment = (departmentName) => {
   console.log('What is the name of the department? \n');
 
@@ -136,7 +139,7 @@ addDepartment = (departmentName) => {
   )
 
 };
-
+//Creates a new role and adds to Database
 addRole = () => {
   const query = connection.query(
     // `INSERT INTO role (title, salary, department_id)
@@ -197,7 +200,7 @@ addRole = () => {
 
 
 }
-
+//Creates an employee and adds to database
 getArray = () => {
   const query = connection.query(
     `SELECT * FROM role`,
@@ -252,6 +255,7 @@ getArray = () => {
     }
   )
 }
+//Used to update the role and updates data in the database
 updateRole = () => {
   const query = connection.query(
     `SELECT id, CONCAT(first_name, " ", last_name) AS emp FROM employee`,
@@ -302,7 +306,7 @@ updateRole = () => {
     }
   )
 }
-
+//Used to initialize the program
 startProgram = () => {
   console.log(
     `
@@ -314,7 +318,7 @@ startProgram = () => {
 
   startPrompt();
 }
-
+//Closes out of the program
 quitProgram = () => {
   console.log(
     `
