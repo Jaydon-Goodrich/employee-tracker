@@ -40,6 +40,9 @@ const startPrompt = function () {
       else if (action === 'Add an employee') {
         getArray();
       }
+      else if (action === 'Update an employee role'){
+        updateRole();
+      }
       else if (action === 'QUIT') {
         quitProgram();
       }
@@ -246,6 +249,56 @@ getArray = () => {
             }
           )
         })
+    }
+  )
+}
+updateRole = () => {
+  const query = connection.query(
+    `SELECT id, CONCAT(first_name, " ", last_name) AS emp FROM employee`,
+    (err, res) => {
+      if(err) throw err;
+      
+      let empArr = [];
+      for (let i = 0; i < res.length; i++) {
+        empArr.push(res[i].emp);
+      }
+      inquirer.prompt([
+        {
+          type: 'list',
+          message: 'Which employee would you like to switch roles',
+          name: 'updateEmp',
+          choices: empArr
+        },
+        {
+          type: 'number',
+          message: 'What is the role ID?',
+          name: 'updateId'
+        }
+      ])
+      .then(({ updateEmp, updateId }) => {
+        let updateEmpId = 0;
+          for (let i = 0; i < res.length; i++) {
+            if (res[i].emp === updateEmp) {
+              updateEmpId = res[i].id;
+            }
+          }
+        const query = connection.query(
+          `UPDATE employee SET ? WHERE ?`,
+          [
+            {
+              role_id: updateId
+            },
+            {
+              id: updateEmpId
+            }
+          ],
+          function(err, res) {
+            if(err) throw err;
+            console.log("Updated successfully!");
+            startPrompt();
+          }
+        )
+      })
     }
   )
 }
